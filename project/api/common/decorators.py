@@ -28,6 +28,5 @@ def login_required(f):
                     status='failure',
                     message=resp)
         g.user_id = resp['sub']
-        g.admin = resp['admin']
         return f(*args, **kwargs)
     return decorated_function

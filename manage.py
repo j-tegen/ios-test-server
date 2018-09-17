@@ -54,7 +54,6 @@ def drop_db():
 def reset():
     drop_db()
     create_db()
-    add_test_data()
 
 
 server = Server(host=settings.host_ip, port=settings.port)

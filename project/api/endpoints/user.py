@@ -26,7 +26,7 @@ save_args = {
 
 
 @bp_user.route('/<id>', methods=['GET'])
-# @login_required
+@login_required
 @use_args(user_args)
 def get_user_detail(args, id):
     user = User.query.get(id)
@@ -43,7 +43,7 @@ def get_user_detail(args, id):
 
 
 @bp_user.route('/', methods=['GET'])
-# @login_required
+@login_required
 def get_user_list():
     users = User.query.all()
     return make_response(
