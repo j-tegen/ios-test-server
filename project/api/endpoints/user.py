@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, g
 from webargs import fields
 from webargs.flaskparser import use_args
 
@@ -66,3 +66,13 @@ def update_user(args, id):
         message='Successfully updated user',
         data=user_schema.dump(user).data)
 
+
+@bp_user.route('/me', methods=['GET'])
+@login_required
+def get_me():
+    user = User.query.get(g.user_id)
+    return make_response(
+        status_code=200,
+        status='success',
+        message=None,
+        data=user_schema.dump(user).data)
