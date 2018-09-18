@@ -35,10 +35,6 @@ class RelatedFromList(fields.Field):
         self.endpoint_details = endpoint_details
 
     def _serialize(self, value, attr, obj):
-        print(value)
-        print(attr)
-        print(obj)
-        print(self)
         if not value:
             return {
                 '_collection': url_for(

@@ -1,7 +1,9 @@
 from marshmallow import fields
 
 from ..models import (
-    User
+    User,
+    Reclamation,
+    Supplier
 )
 from project import ma
 from .custom_fields import RelatedTo, RelatedFromQuery, RelatedFromList
@@ -21,8 +23,27 @@ class UserSchema(BaseSchema):
 
     skanetrafiken_user_info = RelatedTo(attribute='skanetrafiken_user_info')
 
-    # reclamations = RelatedFromList(
-    #     endpoint_list='reclamation.get_reclamation_list',
-    #     endpoint_details='education.get_reclamation_detail',
-    #     attribute='reclamations',
-    #     dump_only=True)
+    reclamations = RelatedFromList(
+        endpoint_list='user.get_reclamation_list',
+        endpoint_details='reclamation.get_reclamation_detail',
+        attribute='reclamations',
+        dump_only=True)
+
+
+class ReclamationSchema(BaseSchema):
+    class Meta:
+        model = Reclamation
+
+    user = RelatedTo(attribute='user')
+    supplier = RelatedTo(attribute='supplier')
+
+
+class SupplierSchema(BaseSchema):
+    class Meta:
+        model = Supplier
+
+    reclamations = RelatedFromList(
+        endpoint_list='supplier.get_reclamation_list',
+        endpoint_details='reclamation.get_reclamation_detail',
+        attribute='reclamations',
+        dump_only=True)

@@ -1,16 +1,21 @@
 from flask import jsonify
 from .endpoints.auth import bp_auth
 from .endpoints.user import bp_user
+from .endpoints.reclamation import bp_reclamation
 from .. import app
 
+ROOT_PREFIX = app.config['APPLICATION_ROOT']
 
 def register_blueprints():
     app.register_blueprint(
         bp_auth,
-        url_prefix='{}/{}'.format(app.config['APPLICATION_ROOT'], 'auth'))
+        url_prefix='{}/{}'.format(ROOT_PREFIX, 'auth'))
     app.register_blueprint(
         bp_user,
-        url_prefix='{}/{}'.format(app.config['APPLICATION_ROOT'], 'user'))
+        url_prefix='{}/{}'.format(ROOT_PREFIX, 'user'))
+    app.register_blueprint(
+        bp_reclamation,
+        url_prefix='{}/{}'.format(ROOT_PREFIX, 'reclamation'))
 
 def register_error_handlers():
     @app.errorhandler(422)

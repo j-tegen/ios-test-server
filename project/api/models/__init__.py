@@ -142,17 +142,24 @@ class Supplier(BaseMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
 
+    @property
+    def _descriptive(self):
+        return self.name
+
 
 class Reclamation(BaseMixin, db.Model):
     __tablename__ = 'reclamation'
     id = db.Column(db.Integer, primary_key=True)
-    registered_on = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref='reclamations')
 
     supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'))
     supplier = db.relationship('Supplier', backref='reclamations')
     approved = db.Column(db.Boolean, default=False)
+
+    @property
+    def _descriptive(self):
+        return "{created} - {supplier}".format(created=self.created, supplier=self.supplier.name)
 
 
 class SkanetrafikenUserInfo(BaseMixin, db.Model):

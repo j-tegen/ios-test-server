@@ -3,8 +3,8 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from project import db
-from project.api.models import User
-from project.api.schemas import UserSchema
+from project.api.models import User, Reclamation
+from project.api.schemas import UserSchema, ReclamationSchema
 from project.api.common.decorators import login_required
 from project.api.common.utils import make_response
 
@@ -76,3 +76,13 @@ def get_me():
         status='success',
         message=None,
         data=user_schema.dump(user).data)
+
+
+@bp_user.route('/<id>/reclamation', methods=['GET'])
+@login_required
+def get_reclamation_list(id):
+    reclamations = Reclamation.query.filter_by(user_id=id).all()
+    return make_response(
+        status_code=200,
+        status='success',
+        data=ReclamationSchema(many=True).dump(reclamations).data)
