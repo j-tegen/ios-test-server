@@ -68,7 +68,7 @@ def update_reclamation(args, id):
 @bp_reclamation.route('/', methods=['POST'])
 @login_required
 @use_args(save_args)
-def create_supplier(args):
+def create_reclamation(args):
     reclamation = Reclamation(**args)
     db.session.commit()
     return make_response(
