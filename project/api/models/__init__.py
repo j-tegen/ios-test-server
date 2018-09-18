@@ -58,6 +58,7 @@ class User(BaseMixin, db.Model):
         nullable=False,
         default=datetime.datetime.utcnow())
 
+    admin = db.Column(db.Boolean, default=False)
     agreed_terms = db.Column(db.Boolean, default=False)
 
     @property
@@ -79,6 +80,7 @@ class User(BaseMixin, db.Model):
             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=days),
             'iat': datetime.datetime.utcnow(),
             'sub': self.id,
+            'admin': self.admin,
         }
         return jwt.encode(
             payload,

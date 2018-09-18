@@ -3,6 +3,7 @@ import coverage
 
 from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
+from project.api.models import User
 
 COV = coverage.coverage(
     branch=True,
@@ -33,10 +34,24 @@ def test():
         return 0
     return 1
 
+
+def add_admin_account():
+    admin = User(**{
+        'email': settings.admin_email,
+        'password': settings.admin_password,
+        'name': 'Admin',
+        'admin': True,
+        'agreed_terms': True,
+    })
+    db.session.add(admin)
+    db.session.commit()
+
+
 @manager.command
 def create_db():
     """Creates the db tables."""
     db.create_all()
+    add_admin_account()
 
 
 @manager.command

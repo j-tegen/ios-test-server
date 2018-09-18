@@ -10,6 +10,9 @@ host_ip = os.environ.get('RESE_HOST', '0.0.0.0')
 port = os.environ.get('RESE_PORT', 5000)
 api_version = 'v1'
 
+admin_email = 'jonatan.tegen@gmail.com'
+admin_password = 'test1234'
+
 postgres_local_base = "postgresql://{uid}:{pw}@{server}:5432/".format(server=server_name,
                                                                              uid=db_uid,
                                                                              pw=db_pw)
