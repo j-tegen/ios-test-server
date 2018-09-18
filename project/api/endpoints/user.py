@@ -29,6 +29,7 @@ save_args = {
 @login_required
 @use_args(user_args)
 def get_user_detail(args, id):
+    """Private"""
     user = User.query.get(id)
     if not user:
         return make_response(
@@ -45,6 +46,7 @@ def get_user_detail(args, id):
 @bp_user.route('/', methods=['GET'])
 @admin_required
 def get_user_list():
+    """Admin"""
     users = User.query.all()
     return make_response(
         status_code=200,
@@ -57,6 +59,7 @@ def get_user_list():
 @login_required
 @use_args(save_args)
 def update_user(args, id):
+    """Private"""
     user = User.query.get(id)
     user.update(**args)
     db.session.commit()
@@ -70,6 +73,7 @@ def update_user(args, id):
 @bp_user.route('/me', methods=['GET'])
 @login_required
 def get_me():
+    """Private"""
     user = User.query.get(g.user_id)
     return make_response(
         status_code=200,
@@ -81,6 +85,7 @@ def get_me():
 @bp_user.route('/<id>/reclamation', methods=['GET'])
 @login_required
 def get_reclamation_list(id):
+    """Private"""
     reclamations = Reclamation.query.filter_by(user_id=id).all()
     return make_response(
         status_code=200,

@@ -38,7 +38,7 @@ logout_args = {
 @bp_auth.route('/register', methods=['POST'])
 @use_args(register_args)
 def register(args):
-    print(args)
+    """Public"""
     user = User.query.filter(
         func.lower(User.email) == func.lower(args['email'])).first()
     if user:
@@ -60,6 +60,7 @@ def register(args):
 @bp_auth.route('/login', methods=['POST'])
 @use_args(login_args)
 def login(args):
+    """Public"""
     user = User.query.filter(
         func.lower(User.email) == func.lower(args['email'])).first()
     if not user:
@@ -89,6 +90,7 @@ def login(args):
 @admin_required
 @use_args(token_args)
 def create_integration_token(args):
+    """Admin"""
     user = User.query.filter(
         func.lower(User.email) == func.lower(args['email'])).first()
     if not user:
@@ -111,6 +113,7 @@ def create_integration_token(args):
 @bp_auth.route('/logout', methods=['POST'])
 @use_args(login_args)
 def logout(args):
+    """Private"""
     auth_header = request.headers.get('Authorization')
     if not auth_header:
         return make_response(

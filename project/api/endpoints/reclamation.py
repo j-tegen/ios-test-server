@@ -5,7 +5,7 @@ from webargs.flaskparser import use_args
 from project import db
 from project.api.models import Reclamation
 from project.api.schemas import ReclamationSchema
-from project.api.common.decorators import login_required
+from project.api.common.decorators import login_required, admin_required
 from project.api.common.utils import make_response
 
 
@@ -27,6 +27,7 @@ save_args = {
 @login_required
 @use_args(reclamation_args)
 def get_reclamation_detail(args, id):
+    """Private"""
     reclamation = Reclamation.query.get(id)
     if not reclamation:
         return make_response(
@@ -41,8 +42,9 @@ def get_reclamation_detail(args, id):
 
 
 @bp_reclamation.route('/', methods=['GET'])
-@login_required
+@admin_required
 def get_reclamation_list():
+    """Admin"""
     reclamations = Reclamation.query.all()
     return make_response(
         status_code=200,
@@ -55,6 +57,7 @@ def get_reclamation_list():
 @login_required
 @use_args(save_args)
 def update_reclamation(args, id):
+    """Private"""
     reclamation = Reclamation.query.get(id)
     reclamation.update(**args)
     db.session.commit()
@@ -69,6 +72,7 @@ def update_reclamation(args, id):
 @login_required
 @use_args(save_args)
 def create_reclamation(args):
+    """Private"""
     reclamation = Reclamation(**args)
     db.session.commit()
     return make_response(

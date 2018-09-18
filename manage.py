@@ -75,7 +75,7 @@ def reset():
 @manager.command
 def list_routes():
     from urllib.parse import unquote
-    output = []
+    routes = []
 
     hidden_endpoints = ['static']
     relevant_methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
@@ -90,10 +90,17 @@ def list_routes():
             [method for method in rule.methods if method in relevant_methods])
         url = url_for(rule.endpoint, **options)
         url = url.replace('/api/v1/api/v1', '/api/v1')
-        line = unquote("{:50s} {:20s} {}".format(rule.endpoint, methods, url))
-        output.append(line)
 
-    for line in sorted(output):
+        if hasattr(app.view_functions[rule.endpoint], 'import_name'):
+            import_name = app.view_functions[rule.endpoint].import_name
+            obj = import_string(import_name)
+            line = unquote("{:50s} {:20s} {:40s} {}".format(rule.endpoint, methods, url, obj.__doc__))
+            routes.append(line)
+        else:
+            line = unquote("{:50s} {:20s} {:40s} {}".format(rule.endpoint, methods, url, app.view_functions[rule.endpoint].__doc__))
+            routes.append(line)
+
+    for line in sorted(routes):
         print(line)
 
 server = Server(host=settings.host_ip, port=settings.port)

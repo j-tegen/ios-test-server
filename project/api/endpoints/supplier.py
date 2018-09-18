@@ -27,6 +27,7 @@ save_args = {
 @login_required
 @use_args(supplier_args)
 def get_supplier_detail(args, id):
+    """Private"""
     supplier = Supplier.query.get(id)
     if not supplier:
         return make_response(
@@ -43,6 +44,7 @@ def get_supplier_detail(args, id):
 @bp_supplier.route('/', methods=['GET'])
 @login_required
 def get_supplier_list():
+    """Private"""
     suppliers = Supplier.query.all()
     return make_response(
         status_code=200,
@@ -53,9 +55,10 @@ def get_supplier_list():
 
 
 @bp_supplier.route('/', methods=['POST'])
-@login_required
+@admin_required
 @use_args(save_args)
 def create_supplier(args):
+    """Admin"""
     supplier = Supplier(**args)
     db.session.commit()
     return make_response(
@@ -66,9 +69,10 @@ def create_supplier(args):
 
 
 @bp_supplier.route('/<id>', methods=['PUT'])
-@login_required
+@admin_required
 @use_args(save_args)
 def update_supplier(args, id):
+    """Admin"""
     supplier = Supplier.query.get(id)
     supplier.update(**args)
     db.session.commit()
@@ -82,6 +86,7 @@ def update_supplier(args, id):
 @bp_supplier.route('/<id>/reclamation', methods=['GET'])
 @login_required
 def get_reclamation_list(id):
+    """Private"""
     reclamations = Reclamation.query.filter_by(supplier_id=id).all()
     return make_response(
         status_code=200,
