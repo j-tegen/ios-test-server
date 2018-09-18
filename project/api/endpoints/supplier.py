@@ -5,7 +5,7 @@ from webargs.flaskparser import use_args
 from project import db
 from project.api.models import Supplier, Reclamation
 from project.api.schemas import SupplierSchema, ReclamationSchema
-from project.api.common.decorators import login_required
+from project.api.common.decorators import login_required, admin_required
 from project.api.common.utils import make_response
 
 
@@ -79,9 +79,9 @@ def update_supplier(args, id):
         data=supplier_schema.dump(supplier).data)
 
 
-@bp_user.route('/<id>/reclamation', methods=['GET'])
+@bp_supplier.route('/<id>/reclamation', methods=['GET'])
 @login_required
-def get_supplier_list(id):
+def get_reclamation_list(id):
     reclamations = Reclamation.query.filter_by(supplier_id=id).all()
     return make_response(
         status_code=200,

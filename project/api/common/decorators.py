@@ -28,5 +28,41 @@ def login_required(f):
                     status='failure',
                     message=resp)
         g.user_id = resp['sub']
+        g.admin = resp['admin']
+        return f(*args, **kwargs)
+    return decorated_function
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not request.headers.get('Authorization'):
+            return make_response(
+                status_code=401,
+                status='failure',
+                message='Missing authorization header')
+        try:
+            auth_header = request.headers.get('Authorization')
+            auth_token = auth_header.split(" ")[1]
+        except IndexError:
+            return make_response(
+                status_code=401,
+                status='failure',
+                message='Bearer token malformed')
+        if auth_token:
+            resp = User.decode_auth_token(auth_token)
+            if isinstance(resp, str):
+                return make_response(
+                    status_code=401,
+                    status='Could not authenticate user',
+                    message=resp)
+
+            if not resp['admin']:
+                return make_response(
+                    status_code=401,
+                    status='This endpoint requires admin authorization'
+                )
+        g.user_id = resp['sub']
+        g.admin = resp['admin']
         return f(*args, **kwargs)
     return decorated_function

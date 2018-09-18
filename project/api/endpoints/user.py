@@ -5,7 +5,7 @@ from webargs.flaskparser import use_args
 from project import db
 from project.api.models import User, Reclamation
 from project.api.schemas import UserSchema, ReclamationSchema
-from project.api.common.decorators import login_required
+from project.api.common.decorators import login_required, admin_required
 from project.api.common.utils import make_response
 
 
@@ -43,7 +43,7 @@ def get_user_detail(args, id):
 
 
 @bp_user.route('/', methods=['GET'])
-@login_required
+@admin_required
 def get_user_list():
     users = User.query.all()
     return make_response(

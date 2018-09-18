@@ -6,7 +6,7 @@ from webargs.flaskparser import use_args
 from project import db
 from project.api.models import (User, BlacklistToken)
 from project.api.schemas import UserSchema
-from project.api.common.decorators import login_required
+from project.api.common.decorators import login_required, admin_required
 from project.api.common.utils import make_response
 
 bp_auth = Blueprint('auth', __name__)
@@ -24,6 +24,10 @@ register_args = {
 login_args = {
     'email': fields.String(required=True),
     'password': fields.String(required=True)
+}
+
+token_args = {
+    'email': fields.String(required=True),
 }
 
 logout_args = {
@@ -62,17 +66,40 @@ def login(args):
         return make_response(
             status_code=404,
             status='failure',
-            message='Invalid password and/or username and account.')
+            message='Invalid password and/or username.')
     if not user.check_password_hash(args['password']):
         return make_response(
             status_code=404,
             status='failure',
-            message='Invalid password and/or username and account.')
+            message='Invalid password and/or username.')
 
     data = user_schema.dump(user).data
-    auth_token = user.encode_auth_token(days=10000)
+    auth_token = user.encode_auth_token(days=1)
     data['auth_token'] = auth_token
 
+    return make_response(
+        status_code=200,
+        status='success',
+        message=None,
+        data=data)
+
+
+
+@bp_auth.route('/create_integration_token', methods=['POST'])
+@admin_required
+@use_args(token_args)
+def create_integration_token(args):
+    user = User.query.filter(
+        func.lower(User.email) == func.lower(args['email'])).first()
+    if not user:
+        return make_response(
+            status_code=404,
+            status='failure',
+            message='Invalid email.')
+
+    auth_token = user.encode_auth_token(days=100000)
+
+    data = dict(auth_token=auth_token)
     return make_response(
         status_code=200,
         status='success',
