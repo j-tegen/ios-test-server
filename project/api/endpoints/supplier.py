@@ -52,10 +52,10 @@ def get_supplier_list():
 
 
 
-@bp_supplier.route('/<id>', methods=['POST'])
+@bp_supplier.route('/', methods=['POST'])
 @login_required
 @use_args(save_args)
-def update_supplier(args, id):
+def create_supplier(args):
     supplier = Supplier(**args)
     db.session.commit()
     return make_response(
