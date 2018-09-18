@@ -78,14 +78,16 @@ def list_routes():
     output = []
 
     hidden_endpoints = ['static']
+    relevant_methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
     for rule in app.url_map.iter_rules():
         if rule.endpoint in hidden_endpoints:
             continue
         options = {}
         for arg in rule.arguments:
-            options[arg] = "[{0}]".format(arg)
+            options[arg] = "<{0}>".format(arg)
 
-        methods = ','.join(rule.methods)
+        methods = ','.join(
+            [method for method in rule.methods if method in relevant_methods])
         url = url_for(rule.endpoint, **options)
         url = url.replace('/api/v1/api/v1', '/api/v1')
         line = unquote("{:50s} {:20s} {}".format(rule.endpoint, methods, url))
