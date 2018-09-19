@@ -20,6 +20,7 @@ supplier_args = {
 
 save_args = {
     'name': fields.String(required=True),
+    'key': fields.String(required=True)
 }
 
 
@@ -60,6 +61,7 @@ def get_supplier_list():
 def create_supplier(args):
     """Admin"""
     supplier = Supplier(**args)
+    db.session.add(supplier)
     db.session.commit()
     return make_response(
         status_code=200,

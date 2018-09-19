@@ -141,8 +141,9 @@ class BlacklistToken(db.Model):
 
 class Supplier(BaseMixin, db.Model):
     __tablename__ = 'supplier'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
+    key = db.Column(db.String(50), nullable=False, unique=True)
 
     @property
     def _descriptive(self):
@@ -168,12 +169,14 @@ class PaymentType(BaseMixin, db.Model):
     __tablename__ = 'payment_type'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)
+    key = db.Column(db.String, nullable=False, unique=True)
 
 
 class ReimbursementType(BaseMixin, db.Model):
     __tablename__ = 'reimbursement_type'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)
+    key = db.Column(db.String, nullable=False, unique=True)
 
 
 class SupplierUserInfo(BaseMixin, db.Model):

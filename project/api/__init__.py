@@ -23,7 +23,7 @@ def register_blueprints():
         bp_supplier,
         url_prefix='{}/{}'.format(ROOT_PREFIX, 'supplier'))
     app.register_blueprint(
-        bp_supplier,
+        bp_payment_type,
         url_prefix='{}/{}'.format(ROOT_PREFIX, 'payment_type'))
     app.register_blueprint(
         bp_admin,

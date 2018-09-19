@@ -14,10 +14,10 @@ payment_type_schema = PaymentTypeSchema()
 payment_types_schema = PaymentTypeSchema(many=True)
 
 def get_suppliers():
-    return [supplier.name for supplier in Supplier.query.all()]
+    return [supplier.key for supplier in Supplier.query.all()]
 
 list_args = {
-    'supplier': fields.String(required=False, validate=lambda s: s in get_suppliers())
+    'supplier': fields.String(required=False, validate=lambda s: s in get_suppliers(), location='query')
 }
 
 payment_type_args = {
@@ -101,4 +101,4 @@ SUPPLIER_PAYMENT_TYPES = dict(
 
 def get_supplier_specific_list(supplier):
     return PaymentType.query.filter(
-        PaymentType.name.in_(SUPPLIER_PAYMENT_TYPES[supplier])).all()
+        PaymentType.key.in_(SUPPLIER_PAYMENT_TYPES[supplier])).all()
