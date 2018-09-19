@@ -167,13 +167,13 @@ class Reclamation(BaseMixin, db.Model):
 class PaymentType(BaseMixin, db.Model):
     __tablename__ = 'payment_type'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, unique=True)
 
 
 class ReimbursementType(BaseMixin, db.Model):
     __tablename__ = 'reimbursement_type'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False, unique=True)
 
 
 class SupplierUserInfo(BaseMixin, db.Model):
