@@ -3,7 +3,10 @@ from marshmallow import fields
 from ..models import (
     User,
     Reclamation,
-    Supplier
+    Supplier,
+    SupplierUserInfo,
+    PaymentType,
+    ReimbursementType
 )
 from project import ma
 from .custom_fields import RelatedTo, RelatedFromQuery, RelatedFromList
@@ -47,3 +50,18 @@ class SupplierSchema(BaseSchema):
         endpoint_details='reclamation.get_reclamation_detail',
         attribute='reclamations',
         dump_only=True)
+
+
+class SupplierUserInfoSchema(BaseSchema):
+    class Meta:
+        model = SupplierUserInfo
+
+
+class PaymentTypeSchema(BaseSchema):
+    class Meta:
+        model = PaymentType
+
+
+class ReimbursementTypeSchema(BaseSchema):
+    class Meta:
+        model = ReimbursementType

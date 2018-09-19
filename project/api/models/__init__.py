@@ -164,11 +164,33 @@ class Reclamation(BaseMixin, db.Model):
         return "{created} - {supplier}".format(created=self.created, supplier=self.supplier.name)
 
 
-class SkanetrafikenUserInfo(BaseMixin, db.Model):
-    __tablename__ = 'skanetrafiken_user_info'
+class PaymentType(BaseMixin, db.Model):
+    __tablename__ = 'payment_type'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+
+
+class ReimbursementType(BaseMixin, db.Model):
+    __tablename__ = 'reimbursement_type'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+
+
+class SupplierUserInfo(BaseMixin, db.Model):
+    __tablename__ = 'supplier_user_info'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    user = db.relationship('User', uselist=False, backref='skanetrafiken_user_info')
+    user = db.relationship('User', uselist=False, backref='supplier_user_infos')
+    supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'))
+    supplier = db.relationship('Supplier', backref='supplier_user_infos')
+
+    payment_type_id = db.Column(db.Integer, db.ForeignKey('payment_type.id'))
+    payment_type = db.relationship('PaymentType', backref='supplier_user_infos')
+
+    reimbursement_type_id = db.Column(db.Integer, db.ForeignKey('reimbursement_type.id'))
+    reimbursement_type = db.relationship('ReimbursementType', backref='supplier_user_infos')
+
+    # Skånetrafiken specific
     jojo_number = db.Column(db.Integer)
 
 
