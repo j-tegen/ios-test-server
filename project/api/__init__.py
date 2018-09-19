@@ -3,7 +3,7 @@ from .endpoints.auth import bp_auth
 from .endpoints.user import bp_user
 from .endpoints.reclamation import bp_reclamation
 from .endpoints.supplier import bp_supplier
-from .endpoints.meta import bp_meta
+from .endpoints.admin import bp_admin
 from .endpoints.payment_type import bp_payment_type
 from .. import app
 
@@ -26,8 +26,8 @@ def register_blueprints():
         bp_supplier,
         url_prefix='{}/{}'.format(ROOT_PREFIX, 'payment_type'))
     app.register_blueprint(
-        bp_meta,
-        url_prefix='{}/{}'.format(ROOT_PREFIX, 'meta'))
+        bp_admin,
+        url_prefix='{}/{}'.format(ROOT_PREFIX, 'admin'))
 
 def register_error_handlers():
     @app.errorhandler(422)

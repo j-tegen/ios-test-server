@@ -2,14 +2,14 @@ from flask import Blueprint, g, url_for
 from webargs import fields
 from project import app
 
-from project.api.common.decorators import login_required
+from project.api.common.decorators import login_required, admin_required
 from project.api.common.utils import make_response
 
 
-bp_meta = Blueprint('meta', __name__)
+bp_admin = Blueprint('admin', __name__)
 
-@bp_meta.route('/routes', methods=['GET'])
-@login_required
+@bp_admin.route('/routes', methods=['GET'])
+@admin_required
 def list_routes():
     """Private"""
     from urllib.parse import unquote
