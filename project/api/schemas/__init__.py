@@ -6,7 +6,8 @@ from ..models import (
     Supplier,
     SupplierUserInfo,
     PaymentType,
-    ReimbursementType
+    ReimbursementType,
+    Station,
 )
 from project import ma
 from .custom_fields import RelatedTo, RelatedFromQuery, RelatedFromList
@@ -65,3 +66,8 @@ class PaymentTypeSchema(BaseSchema):
 class ReimbursementTypeSchema(BaseSchema):
     class Meta:
         model = ReimbursementType
+
+
+class StationSchema(BaseSchema):
+    class Meta:
+        model = Station

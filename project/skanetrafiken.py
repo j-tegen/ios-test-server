@@ -6,6 +6,7 @@ from project import app, db, settings # noqa
 
 SUPPLIER_KEY = 'skanetrafiken'
 SUPPLIER_NAME = 'Skånetrafiken'
+PAYMENT_TYPES = ['jojo', 'app', 'cash']
 
 def get_supplier():
     supplier = Supplier.query.filter_by(key=SUPPLIER_KEY).first()

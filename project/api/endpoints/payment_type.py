@@ -2,7 +2,7 @@ from flask import Blueprint, g
 from webargs import fields
 from webargs.flaskparser import use_args
 
-from project import db
+from project import db, skanetrafiken
 from project.api.models import PaymentType, Supplier
 from project.api.schemas import PaymentTypeSchema
 from project.api.common.decorators import login_required, admin_required
@@ -96,7 +96,7 @@ def create_payment_type(args):
 
 
 SUPPLIER_PAYMENT_TYPES = dict(
-    skanetrafiken=['jojo', 'app', 'cash']
+    skanetrafiken=skanetrafiken.PAYMENT_TYPES
 )
 
 def get_supplier_specific_list(supplier):
