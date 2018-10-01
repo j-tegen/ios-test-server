@@ -6,6 +6,7 @@ from flask_script import Manager, Server
 from flask_migrate import Migrate, MigrateCommand
 from project.api.models import User
 
+
 COV = coverage.coverage(
     branch=True,
     include='project/*',
@@ -17,7 +18,7 @@ COV = coverage.coverage(
 )
 COV.start()
 
-from project import app, db, settings # noqa
+from project import app, db, settings, skanetrafiken # noqa
 
 migrate = Migrate(app, db)
 manager = Manager(app)
@@ -64,6 +65,10 @@ def drop_db():
     """Drops the db tables."""
     db.engine.execute("drop schema if exists public cascade")
     db.engine.execute("create schema public")
+
+@manager.command
+def setup_skanetrafiken():
+    skanetrafiken.add_stations()
 
 
 @manager.command
