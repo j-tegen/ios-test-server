@@ -197,6 +197,15 @@ class SupplierUserInfo(BaseMixin, db.Model):
     jojo_number = db.Column(db.Integer)
 
 
+class Station(BaseMixin, db.Model):
+    __tablename__ = 'station'
+    id = db.Column(db.Integer, primary_key=True)
+    supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'))
+    supplier = db.relationship('Supplier', backref='stations')
+    name = db.Column(db.String, nullable=False)
+    migration_id = db.Column(db.String, nullable=False)
+
+
 # # LOG ACTIVITIES
 # # I.e. 'John Doe is interested in Cool project, BMW'
 # # or   'Jane Doe was accepted for Cool project2, Volvo'
