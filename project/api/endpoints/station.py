@@ -52,7 +52,7 @@ def get_station_list(args):
     stations = Station.query.filter(
         Station.supplier.has(key=args['supplier_key']),
         Station.name.ilike(filter_str)).order_by(
-            func.similarity(Station.name, filter_str).desc()
+            func.similarity(Station.name, args['filter']).desc()
         ).all()
 
     return make_response(
