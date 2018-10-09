@@ -17,7 +17,7 @@ def get_suppliers():
     return [supplier.key for supplier in Supplier.query.all()]
 
 list_args = {
-    'supplier': fields.String(required=False, validate=lambda s: s in get_suppliers(), location='query')
+    'supplier_key': fields.String(required=False, validate=lambda s: s in get_suppliers(), location='query')
 }
 
 payment_type_args = {
@@ -25,7 +25,8 @@ payment_type_args = {
 }
 
 save_args = {
-    'name': fields.Boolean(required=True),
+    'name': fields.String(required=True),
+    'key': fields.String(required=True)
 }
 
 
@@ -52,10 +53,10 @@ def get_payment_type_detail(args, id):
 @use_args(list_args)
 def get_payment_type_list(args):
     """Private"""
-    supplier = args.get('supplier', None)
+    supplier_key = args.get('supplier_key', None)
     payment_types = None
-    if supplier:
-        payment_types = get_supplier_specific_list(supplier)
+    if supplier_key:
+        payment_types = get_supplier_specific_list(supplier_key)
     else:
         payment_types = PaymentType.query.all()
 
@@ -99,6 +100,6 @@ SUPPLIER_PAYMENT_TYPES = dict(
     skanetrafiken=skanetrafiken.PAYMENT_TYPES
 )
 
-def get_supplier_specific_list(supplier):
+def get_supplier_specific_list(supplier_key):
     return PaymentType.query.filter(
-        PaymentType.key.in_(SUPPLIER_PAYMENT_TYPES[supplier])).all()
+        PaymentType.key.in_(SUPPLIER_PAYMENT_TYPES[supplier_key])).all()
