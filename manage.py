@@ -76,7 +76,7 @@ def reset():
     drop_db()
     create_db()
 
-server = Server(host=settings.host_ip, port=settings.port)
+server = Server(host=settings.host_ip)
 manager.add_command("runserver", server)
 
 if __name__ == '__main__':
