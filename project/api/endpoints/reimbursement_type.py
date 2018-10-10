@@ -42,11 +42,7 @@ def get_reimbursement_type_detail(id):
 def get_reimbursement_type_list():
     """Private"""
     reimbursement_types = ReimbursementType.query.all()
-    if not reimbursement_type:
-        return make_response(
-            status_code=404,
-            status='failure',
-            message='No reimbursement_type found with that id')
+
     return make_response(
         status_code=200,
         status='success',

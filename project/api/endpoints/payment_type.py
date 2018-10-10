@@ -46,11 +46,7 @@ def get_payment_type_detail(id):
 def get_payment_type_list():
     """Private"""
     payment_types = PaymentType.query.all()
-    if not payment_type:
-        return make_response(
-            status_code=404,
-            status='failure',
-            message='No payment_type found with that id')
+
     return make_response(
         status_code=200,
         status='success',
