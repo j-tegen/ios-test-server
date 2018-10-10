@@ -102,7 +102,7 @@ def change_password(args):
 
     user = User.query.get(g.user_id)
 
-    user.password = args['password']
+    user.set_password(args['password'])
     db.session.add(user)
     db.session.commit()
 
