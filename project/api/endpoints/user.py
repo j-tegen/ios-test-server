@@ -97,7 +97,7 @@ def get_reclamation_list(id):
         data=ReclamationSchema(many=True).dump(reclamations).data)
 
 
-@bp_auth.route('/<id>/change_password', methods=['PUT'])
+@bp_user.route('/<id>/change_password', methods=['PUT'])
 @admin_required
 @use_args(password_args)
 def change_password(args, id):
