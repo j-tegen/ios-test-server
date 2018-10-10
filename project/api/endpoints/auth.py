@@ -26,6 +26,10 @@ login_args = {
     'password': fields.String(required=True)
 }
 
+password_args = {
+    'password': fields.String(required=True)
+}
+
 token_args = {
     'email': fields.String(required=True),
 }
@@ -77,6 +81,30 @@ def login(args):
     data = user_schema.dump(user).data
     auth_token = user.encode_auth_token(days=1000)
     data['auth_token'] = auth_token
+
+    return make_response(
+        status_code=200,
+        status='success',
+        message=None,
+        data=data)
+
+
+@bp_auth.route('/change_password', methods=['POST'])
+@login_required
+@use_args(password_args)
+def change_password(args):
+    """Public"""
+    if not g.user_id:
+        return make_response(
+            status_code=404,
+            status='failure',
+            message='No user found for this session!')
+
+    user = User.query.get(g.user_id)
+
+    user.password = args['password']
+    db.session.add(user)
+    db.session.commit()
 
     return make_response(
         status_code=200,
