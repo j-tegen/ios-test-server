@@ -88,7 +88,7 @@ class User(BaseMixin, db.Model):
             algorithm='HS256'
         ).decode('utf-8')
 
-    def set_password(password):
+    def set_password(self, password):
         self.password = bcrypt.generate_password_hash(
             password, app.config.get('BCRYPT_LOG_ROUNDS')
         ).decode()
