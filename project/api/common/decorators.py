@@ -7,13 +7,13 @@ from .utils import make_response
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not request.headers.get('Authorization'):
+        if not request.headers.get('Token'):
             return make_response(
                 status_code=401,
                 status='failure',
                 message='Missing authorization header')
         try:
-            auth_header = request.headers.get('Authorization')
+            auth_header = request.headers.get('Token')
             auth_token = auth_header.split(" ")[1]
         except IndexError:
             return make_response(
@@ -36,13 +36,13 @@ def login_required(f):
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not request.headers.get('Authorization'):
+        if not request.headers.get('Token'):
             return make_response(
                 status_code=401,
                 status='failure',
                 message='Missing authorization header')
         try:
-            auth_header = request.headers.get('Authorization')
+            auth_header = request.headers.get('Token')
             auth_token = auth_header.split(" ")[1]
         except IndexError:
             return make_response(

@@ -72,6 +72,11 @@ def setup_skanetrafiken():
 
 
 @manager.command
+def add_admin():
+    add_admin_account()
+
+
+@manager.command
 def reset():
     drop_db()
     create_db()
