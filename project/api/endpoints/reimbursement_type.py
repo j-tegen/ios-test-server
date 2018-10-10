@@ -37,6 +37,23 @@ def get_reimbursement_type_detail(id):
         data=reimbursement_type_schema.dump(reimbursement_type).data)
 
 
+@bp_reimbursement_type.route('/', methods=['GET'])
+@login_required
+def get_reimbursement_type_list():
+    """Private"""
+    reimbursement_types = ReimbursementType.query.all()
+    if not reimbursement_type:
+        return make_response(
+            status_code=404,
+            status='failure',
+            message='No reimbursement_type found with that id')
+    return make_response(
+        status_code=200,
+        status='success',
+        message=None,
+        data=reimbursement_types_schema.dump(reimbursement_types).data)
+
+
 @bp_reimbursement_type.route('/<id>', methods=['PUT'])
 @admin_required
 @use_args(save_args)

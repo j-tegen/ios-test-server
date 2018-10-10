@@ -41,6 +41,23 @@ def get_payment_type_detail(id):
         data=payment_type_schema.dump(payment_type).data)
 
 
+@bp_payment_type.route('/', methods=['GET'])
+@login_required
+def get_payment_type_list():
+    """Private"""
+    payment_types = PaymentType.query.all()
+    if not payment_type:
+        return make_response(
+            status_code=404,
+            status='failure',
+            message='No payment_type found with that id')
+    return make_response(
+        status_code=200,
+        status='success',
+        message=None,
+        data=payment_types_schema.dump(payment_types).data)
+
+
 @bp_payment_type.route('/<id>', methods=['PUT'])
 @admin_required
 @use_args(save_args)
