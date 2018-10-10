@@ -138,12 +138,30 @@ class BlacklistToken(db.Model):
             return False
 
 
+supplier_payment_type = db.Table('supplier_payment_type',
+    db.Column('supplier_id', db.Integer, db.ForeignKey('supplier.id'), primary_key=True),
+    db.Column('payment_type_id', db.Integer, db.ForeignKey('payment_type.id'), primary_key=True)
+)
+supplier_reimbursement_type = db.Table('supplier_reimbursement_type',
+    db.Column('supplier_id', db.Integer, db.ForeignKey('supplier.id'), primary_key=True),
+    db.Column('reimbursement_type_id', db.Integer, db.ForeignKey('reimbursement_type.id'), primary_key=True)
+)
 
 class Supplier(BaseMixin, db.Model):
     __tablename__ = 'supplier'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False, unique=True)
     key = db.Column(db.String(50), nullable=False, unique=True)
+
+    payment_types = db.relationship('PaymentType',
+        secondary=supplier_payment_type,
+        lazy='subquery',
+        backref=db.backref('suppliers', lazy=True))
+
+    reimbursement_types = db.relationship('ReimbursementType',
+        secondary=supplier_reimbursement_type,
+        lazy='subquery',
+        backref=db.backref('suppliers', lazy=True))
 
     @property
     def _descriptive(self):

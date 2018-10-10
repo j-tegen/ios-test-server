@@ -3,8 +3,8 @@ from webargs import fields
 from webargs.flaskparser import use_args
 
 from project import db
-from project.api.models import Supplier, Reclamation
-from project.api.schemas import SupplierSchema, ReclamationSchema
+from project.api.models import Supplier, Reclamation, PaymentType, ReimbursementType
+from project.api.schemas import SupplierSchema, ReclamationSchema, PaymentTypeSchema, ReimbursementTypeSchema
 from project.api.common.decorators import login_required, admin_required
 from project.api.common.utils import make_response
 
@@ -94,3 +94,27 @@ def get_reclamation_list(id):
         status_code=200,
         status='success',
         data=ReclamationSchema(many=True).dump(reclamations).data)
+
+
+@bp_supplier.route('/<id>/payment_types', methods=['GET'])
+@login_required
+def get_payment_types(id):
+    """Private"""
+
+    payment_types = Supplier.query.get(id).payment_types
+    return make_response(
+        status_code=200,
+        status='success',
+        data=PaymentTypeSchema(many=True).dump(payment_types).data)
+
+
+@bp_supplier.route('/<id>/reimbursement_types', methods=['GET'])
+@login_required
+def get_reimbursement_types(id):
+    """Private"""
+
+    reimbursement_types = Supplier.query.get(id).reimbursement_types
+    return make_response(
+        status_code=200,
+        status='success',
+        data=ReimbursementTypeSchema(many=True).dump(reimbursement_types).data)

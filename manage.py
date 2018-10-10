@@ -68,7 +68,7 @@ def drop_db():
 
 @manager.command
 def setup_skanetrafiken():
-    skanetrafiken.add_stations()
+    skanetrafiken.setup_skanetrafiken()
 
 
 @manager.command
