@@ -18,6 +18,10 @@ user_args = {
     'id': fields.Integer(required=True, location='view_args')
 }
 
+password_args = {
+    'password': fields.String(required=True)
+}
+
 save_args = {
     'name': fields.String(required=True),
     'email': fields.String(required=True),
@@ -91,3 +95,27 @@ def get_reclamation_list(id):
         status_code=200,
         status='success',
         data=ReclamationSchema(many=True).dump(reclamations).data)
+
+
+@bp_auth.route('/<id>/change_password', methods=['PUT'])
+@admin_required
+@use_args(password_args)
+def change_password(args, id):
+    """Admin"""
+    user = User.query.get(g.user_id)
+    if not user:
+        return make_response(
+            status_code=404,
+            status='failure',
+            message='No user found with that id!')
+
+
+    user.set_password(args['password'])
+    db.session.add(user)
+    db.session.commit()
+
+    return make_response(
+        status_code=200,
+        status='success',
+        message=None,
+        data=user_schema.dump(user).data)
