@@ -110,7 +110,7 @@ def change_password(args):
         status_code=200,
         status='success',
         message=None,
-        data=data)
+        data=user_schema.dump(user).data)
 
 
 
