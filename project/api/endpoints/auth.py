@@ -89,11 +89,11 @@ def login(args):
         data=data)
 
 
-@bp_auth.route('/change_password', methods=['POST'])
+@bp_auth.route('/change_password', methods=['PUT'])
 @login_required
 @use_args(password_args)
 def change_password(args):
-    """Public"""
+    """Private"""
     if not g.user_id:
         return make_response(
             status_code=404,
