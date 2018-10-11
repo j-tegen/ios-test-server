@@ -51,7 +51,7 @@ def get_supplier_list():
         status_code=200,
         status='success',
         message=None,
-        data=suppliers_schema.dump(suppliers).data)
+        data=SupplierSchema(many=True, exclude=['stations']).dump(suppliers).data)
 
 
 

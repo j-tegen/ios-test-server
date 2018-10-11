@@ -45,7 +45,7 @@ class ReclamationSchema(BaseSchema):
 class SupplierSchema(BaseSchema):
     class Meta:
         model = Supplier
-        exclude = ['stations', 'supplier_user_infos']
+        exclude = ['stations']
 
     payment_types = RelatedFromList(
         endpoint_list='supplier.get_payment_types',
