@@ -27,9 +27,13 @@ def login_required(f):
                     status_code=401,
                     status='failure',
                     message=resp)
-        g.user_id = resp.get('sub', None)
-        g.admin = resp.get('admin', None)
-        return f(*args, **kwargs)
+            g.user_id = resp.get('sub', None)
+            g.admin = resp.get('admin', None)
+            return f(*args, **kwargs)
+        return make_response(
+            status_code=401,
+            status='Could not authenticate user',
+            message=resp)
     return decorated_function
 
 
@@ -62,7 +66,11 @@ def admin_required(f):
                     status_code=401,
                     status='This endpoint requires admin authorization'
                 )
-        g.user_id = resp.get('sub', None)
-        g.admin = resp.get('admin', None)
-        return f(*args, **kwargs)
+            g.user_id = resp.get('sub', None)
+            g.admin = resp.get('admin', None)
+            return f(*args, **kwargs)
+        return make_response(
+                    status_code=401,
+                    status='Could not authenticate user',
+                    message=resp)
     return decorated_function
