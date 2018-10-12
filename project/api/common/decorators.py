@@ -19,7 +19,7 @@ def login_required(f):
             return make_response(
                 status_code=401,
                 status='failure',
-                message='Bearer token malformed')
+                message='JWT token malformed')
         if auth_token:
             resp = User.decode_auth_token(auth_token)
             if isinstance(resp, str):
@@ -33,7 +33,7 @@ def login_required(f):
         return make_response(
             status_code=401,
             status='Could not authenticate user',
-            message=resp)
+            message='JWT token malformed')
     return decorated_function
 
 
@@ -52,7 +52,7 @@ def admin_required(f):
             return make_response(
                 status_code=401,
                 status='failure',
-                message='Bearer token malformed')
+                message='JWT token malformed')
         if auth_token:
             resp = User.decode_auth_token(auth_token)
             if isinstance(resp, str):
@@ -72,5 +72,5 @@ def admin_required(f):
         return make_response(
                     status_code=401,
                     status='Could not authenticate user',
-                    message=resp)
+                    message='JWT token malformed')
     return decorated_function
