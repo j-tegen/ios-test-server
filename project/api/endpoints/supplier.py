@@ -23,6 +23,10 @@ save_args = {
     'key': fields.String(required=True)
 }
 
+stations_args = {
+    'filter': fields.String(),
+}
+
 
 @bp_supplier.route('/<id>', methods=['GET'])
 @login_required
@@ -118,3 +122,26 @@ def get_reimbursement_types(id):
         status_code=200,
         status='success',
         data=ReimbursementTypeSchema(many=True).dump(reimbursement_types).data)
+
+
+@bp_station.route('/<id>/station', methods=['GET'])
+@login_required
+@use_args(stations_args)
+def get_station_list(args, id):
+    """Private"""
+    filter_str = '%{}%'.format(args['filter'])
+    stations
+    if args.get('filter', None):
+        stations = Station.query.filter(
+            Station.supplier.has(id=id),
+            Station.name.ilike(filter_str)).order_by(
+                func.similarity(Station.name, args['filter']).desc()
+            ).all()
+    else:
+        stations = Supplier.query.get(id).stations
+
+    return make_response(
+        status_code=200,
+        status='success',
+        message=None,
+        data=stations_schema.dump(stations).data)

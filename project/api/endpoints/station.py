@@ -58,5 +58,5 @@ def get_station_list(args):
     return make_response(
         status_code=200,
         status='success',
-        message=None,
+        message='This method has been replaced by "../supplier/<id>/station/ and should be considered deprecated.',
         data=stations_schema.dump(stations).data)
