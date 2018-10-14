@@ -89,6 +89,20 @@ def update_supplier(args, id):
         data=supplier_schema.dump(supplier).data)
 
 
+@bp_supplier.route('/<id>', methods=['DELETE'])
+@admin_required
+def delete_supplier(id):
+    """Admin"""
+    supplier = Supplier.query.get(id)
+    db.session.delete(supplier)
+    db.session.commit()
+    return make_response(
+        status_code=200,
+        status='success',
+        message='Successfully updated supplier',
+        data=id)
+
+
 @bp_supplier.route('/<id>/reclamation', methods=['GET'])
 @login_required
 def get_reclamation_list(id):
