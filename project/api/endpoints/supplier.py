@@ -138,7 +138,7 @@ def get_reimbursement_types(id):
         data=ReimbursementTypeSchema(many=True).dump(reimbursement_types).data)
 
 
-@bp_station.route('/<id>/station', methods=['GET'])
+@bp_supplier.route('/<id>/station', methods=['GET'])
 @login_required
 @use_args(stations_args)
 def get_station_list(args, id):
