@@ -101,15 +101,15 @@ def get_me():
         data=user_schema.dump(user).data)
 
 
-# @bp_user.route('/<id>/reclamation', methods=['GET'])
-# @login_required
-# def get_reclamation_list(id):
-#     """Private"""
-#     reclamations = Reclamation.query.filter_by(user_id=id).all()
-#     return make_response(
-#         status_code=200,
-#         status='success',
-#         data=ReclamationSchema(many=True).dump(reclamations).data)
+@bp_user.route('/<id>/reclamation', methods=['GET'])
+@admin_required
+def get_reclamation_list(id):
+    """Admin"""
+    reclamations = Reclamation.query.filter_by(user_id=id).all()
+    return make_response(
+        status_code=200,
+        status='success',
+        data=ReclamationSchema(many=True).dump(reclamations).data)
 
 
 @bp_user.route('/<id>/change_password', methods=['PUT'])
