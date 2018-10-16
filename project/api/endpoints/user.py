@@ -30,10 +30,10 @@ save_args = {
 
 
 @bp_user.route('/<id>', methods=['GET'])
-@login_required
+@admin_required
 @use_args(user_args)
 def get_user_detail(args, id):
-    """Private"""
+    """Admin"""
     user = User.query.get(id)
     if not user:
         return make_response(
@@ -60,10 +60,10 @@ def get_user_list():
 
 
 @bp_user.route('/<id>', methods=['PUT'])
-@login_required
+@admin_required
 @use_args(save_args)
 def update_user(args, id):
-    """Private"""
+    """Admin"""
     user = User.query.get(id)
     user.update(**args)
     db.session.commit()
@@ -74,9 +74,9 @@ def update_user(args, id):
         data=user_schema.dump(user).data)
 
 
-@bp_user.route('/me', methods=['GET'])
+@bp_user.route('/me', methods=['PUT'])
 @login_required
-def get_me():
+def update_me():
     """Private"""
     user = User.query.get(g.user_id)
     return make_response(
@@ -86,15 +86,30 @@ def get_me():
         data=user_schema.dump(user).data)
 
 
-@bp_user.route('/<id>/reclamation', methods=['GET'])
+@bp_user.route('/me', methods=['GET'])
 @login_required
-def get_reclamation_list(id):
+@use_args(save_args)
+def get_me():
     """Private"""
-    reclamations = Reclamation.query.filter_by(user_id=id).all()
+    user = User.query.get(g.user_id)
+    user.update(**args)
+    db.session.commit()
     return make_response(
         status_code=200,
         status='success',
-        data=ReclamationSchema(many=True).dump(reclamations).data)
+        message=None,
+        data=user_schema.dump(user).data)
+
+
+# @bp_user.route('/<id>/reclamation', methods=['GET'])
+# @login_required
+# def get_reclamation_list(id):
+#     """Private"""
+#     reclamations = Reclamation.query.filter_by(user_id=id).all()
+#     return make_response(
+#         status_code=200,
+#         status='success',
+#         data=ReclamationSchema(many=True).dump(reclamations).data)
 
 
 @bp_user.route('/<id>/change_password', methods=['PUT'])

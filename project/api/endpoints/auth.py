@@ -79,7 +79,7 @@ def login(args):
             message='Invalid password and/or username.')
 
     data = user_schema.dump(user).data
-    auth_token = user.encode_auth_token(days=1000)
+    auth_token = user.encode_auth_token(days=10000)
     data['auth_token'] = auth_token
 
     return make_response(
