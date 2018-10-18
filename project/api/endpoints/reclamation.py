@@ -20,8 +20,8 @@ reclamation_args = {
 
 save_args = {
     'approved': fields.Boolean(required=True),
-    'expected_arrival': fields.DateTime(format='%Y-%m-%dT00:00%z', required=True),
-    'actual_arrival': fields.DateTime(format='%Y-%m-%dT00:00%z', required=True),
+    'expected_arrival': fields.DateTime(format='iso', required=True),
+    'actual_arrival': fields.DateTime(format='iso', required=True),
     'vehicle_number': fields.String(required=False),
     'refund': fields.Float(required=False),
     'supplier_id': fields.Integer(required=True),
