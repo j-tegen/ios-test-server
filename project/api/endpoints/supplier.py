@@ -183,4 +183,4 @@ def create_reclamation(args, id):
         status_code=200,
         status='success',
         message='Successfully created reclamation',
-        data=reclamation_schema.dump(reclamation).data)
+        data=ReclamationSchema().dump(reclamation).data)
