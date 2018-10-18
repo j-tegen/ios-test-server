@@ -2,6 +2,7 @@ from flask import Blueprint, request, g
 from sqlalchemy import func
 from webargs import fields
 from webargs.flaskparser import use_args
+from marshmallow import validate
 
 from project import db
 from project.api.models import (User, BlacklistToken)
@@ -13,9 +14,9 @@ bp_auth = Blueprint('auth', __name__)
 user_schema = UserSchema()
 
 register_args = {
-    'name': fields.String(required=True),
-    'email': fields.String(required=True),
-    'password': fields.String(required=True),
+    'name': fields.String(required=True, validate=validate.Length(min=6, error='Name must be at least 6 characters long')),
+    'email': fields.String(required=True, validate=validate.Email(error='Not a valid email address')),
+    'password': fields.String(required=True, validate=validate.Length(min=6, error='Password must be at least 6 characters long')),
     'agreed_terms': fields.Boolean(required=True, validate=lambda p: p == True),
     'phone_number': fields.String(required=False),
     'social_security': fields.String(required=False),
