@@ -176,6 +176,7 @@ def create_reclamation(args, id):
     """Private"""
     supplier = Supplier.query.get(id)
     reclamation = Reclamation(**args)
+    reclamation.user = g.user_id
     supplier.reclamations.append(reclamation)
     db.session.add(supplier)
     db.session.commit()
