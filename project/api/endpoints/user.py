@@ -74,7 +74,7 @@ def update_user(args, id):
         data=user_schema.dump(user).data)
 
 
-@bp_user.route('/me', methods=['PUT'])
+@bp_user.route('/me', methods=['GET'])
 @login_required
 def update_me():
     """Private"""
@@ -86,7 +86,7 @@ def update_me():
         data=user_schema.dump(user).data)
 
 
-@bp_user.route('/me', methods=['GET'])
+@bp_user.route('/me', methods=['PUT'])
 @login_required
 @use_args(save_args)
 def get_me():
