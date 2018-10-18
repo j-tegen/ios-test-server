@@ -38,6 +38,7 @@ class ReclamationSchema(BaseSchema):
     class Meta:
         model = Reclamation
 
+    refund = fields.Decimal(as_string=True)
     user = RelatedTo(attribute='user')
     supplier = RelatedTo(attribute='supplier')
 
