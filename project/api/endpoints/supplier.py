@@ -27,6 +27,14 @@ stations_args = {
     'filter': fields.String(),
 }
 
+reclamation_args = {
+    'approved': fields.Boolean(required=True),
+    'expected_arrival': fields.DateTime(format='iso', required=True),
+    'actual_arrival': fields.DateTime(format='iso', required=True),
+    'vehicle_number': fields.String(required=False),
+    'refund': fields.Float(required=False),
+}
+
 
 @bp_supplier.route('/<id>', methods=['GET'])
 @login_required
@@ -159,3 +167,20 @@ def get_station_list(args, id):
         status='success',
         message=None,
         data=stations_schema.dump(stations).data)
+
+
+@bp_supplier.route('/<id>/reclamation', methods=['POST'])
+@login_required
+@use_args(reclamation_args)
+def create_reclamation(args, id):
+    """Private"""
+    supplier = Supplier.query.get(id)
+    reclamation = Reclamation(**args)
+    supplier.add(reclamation)
+    db.session.add(supplier)
+    db.session.commit()
+    return make_response(
+        status_code=200,
+        status='success',
+        message='Successfully created reclamation',
+        data=reclamation_schema.dump(reclamation).data)
