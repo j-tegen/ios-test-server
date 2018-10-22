@@ -75,13 +75,13 @@ class SupplierUserInfoSchema(BaseSchema):
 class PaymentTypeSchema(BaseSchema):
     class Meta:
         model = PaymentType
-        exclude = ['supplier_user_infos', 'suppliers']
+        exclude = ['supplier_user_infos']
 
 
 class ReimbursementTypeSchema(BaseSchema):
     class Meta:
         model = ReimbursementType
-        exclude = ['supplier_user_infos', 'suppliers']
+        exclude = ['supplier_user_infos']
 
 
 class StationSchema(BaseSchema):
