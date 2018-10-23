@@ -185,3 +185,51 @@ def create_reclamation(args, id):
         status='success',
         message='Successfully created reclamation',
         data=ReclamationSchema().dump(reclamation).data)
+
+
+@bp_supplier.route('/<id>/connect_payment_type', methods=['PUT'])
+@admin_required
+@use_args({ 'id': fields.Integer(required=True) })
+def connect_payment_type(args, id):
+    """Admin"""
+    supplier = Supplier.query.get(id)
+    payment_type = PaymentType.query.get(args['id'])
+    if not supplier or not payment_type:
+        return make_response(
+            status_code=404,
+            status='failure',
+            message='Could not find supplier or payment_type',
+        )
+    supplier.payment_types.append(payment_type)
+    db.session.add(supplier)
+    db.session.commit()
+    return make_response(
+        status_code=200,
+        status='success',
+        message='Successfully created reclamation',
+        data=supplier_schema.dump(supplier).data,
+    )
+
+
+@bp_supplier.route('/<id>/connect_reimbursement_type', methods=['PUT'])
+@admin_required
+@use_args({ 'id': fields.Integer(required=True) })
+def connect_reimbursement_type(args, id):
+    """Admin"""
+    supplier = Supplier.query.get(id)
+    reimbursement_type = ReimbursementType.query.get(args['id'])
+    if not supplier or not reimbursement_type:
+        return make_response(
+            status_code=404,
+            status='failure',
+            message='Could not find supplier or reimbursement_type',
+        )
+    supplier.reimbursement_types.append(reimbursement_type)
+    db.session.add(supplier)
+    db.session.commit()
+    return make_response(
+        status_code=200,
+        status='success',
+        message='Successfully created reclamation',
+        data=supplier_schema.dump(supplier).data,
+    )
