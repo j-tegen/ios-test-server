@@ -111,7 +111,7 @@ def delete_supplier(id):
         data=id)
 
 
-@bp_supplier.route('/<id>/reclamation', methods=['GET'])
+@bp_supplier.route('/<id>/reclamations', methods=['GET'])
 @login_required
 def get_reclamation_list(id):
     """Private"""
