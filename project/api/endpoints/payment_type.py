@@ -61,6 +61,7 @@ def update_payment_type(args, id):
     """Admin"""
     payment_type = PaymentType.query.get(id)
     payment_type.update(**args)
+    db.session.add(payment_type)
     db.session.commit()
     return make_response(
         status_code=200,
@@ -75,6 +76,7 @@ def update_payment_type(args, id):
 def create_payment_type(args):
     """Admin"""
     payment_type = PaymentType(**args)
+    db.session.add(payment_type)
     db.session.commit()
     return make_response(
         status_code=200,

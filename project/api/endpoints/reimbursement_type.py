@@ -57,6 +57,7 @@ def update_reimbursement_type(args, id):
     """Admin"""
     reimbursement_type = ReimbursementType.query.get(id)
     reimbursement_type.update(**args)
+    db.session.add(reimbursement_type)
     db.session.commit()
     return make_response(
         status_code=200,
@@ -71,6 +72,7 @@ def update_reimbursement_type(args, id):
 def create_reimbursement_type(args):
     """Admin"""
     reimbursement_type = ReimbursementType(**args)
+    db.session.add(reimbursement_type)
     db.session.commit()
     return make_response(
         status_code=200,

@@ -185,6 +185,7 @@ class Reclamation(BaseMixin, db.Model):
     expected_arrival = db.Column(db.DateTime, nullable=False)
     actual_arrival = db.Column(db.DateTime, nullable=False)
     vehicle_number = db.Column(db.String, nullable=True)
+    booking_number = db.Column(db.String, nullable=True)
 
     refund = db.Column(db.Numeric(10,2), nullable=False, default=0)
     approved = db.Column(db.Boolean, default=False)
