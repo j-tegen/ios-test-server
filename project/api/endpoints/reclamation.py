@@ -18,6 +18,10 @@ reclamation_args = {
     'id': fields.Integer(required=True, location='view_args')
 }
 
+win_args = {
+    'refund': fields.Float(required=False)
+}
+
 save_args = {
     'approved': fields.Boolean(required=True),
     'expected_arrival': fields.DateTime(format='iso', required=True),
@@ -66,11 +70,48 @@ def update_reclamation(args, id):
     """Private"""
     reclamation = Reclamation.query.get(id)
     reclamation.update(**args)
+    db.session.add(reclamation)
     db.session.commit()
     return make_response(
         status_code=200,
         status='success',
         message='Successfully updated reclamation',
+        data=reclamation_schema.dump(reclamation).data)
+
+
+@bp_reclamation.route('/<id>/won', methods=['PUT'])
+@login_required
+@use_args(win_args)
+def win_battle(args, id):
+    """Private"""
+    reclamation = Reclamation.query.get(id)
+    refund = args.get('refund', None)
+    reclamation.approved = True
+    if refund:
+        reclamation.refund = refund
+
+    db.session.add(reclamation)
+    db.session.commit()
+    return make_response(
+        status_code=200,
+        status='success',
+        message='Won battle!',
+        data=reclamation_schema.dump(reclamation).data)
+
+
+@bp_reclamation.route('/<id>/lost', methods=['PUT'])
+@login_required
+def lose_battle(id):
+    """Private"""
+    reclamation = Reclamation.query.get(id)
+    reclamation.approved = False
+
+    db.session.add(reclamation)
+    db.session.commit()
+    return make_response(
+        status_code=200,
+        status='success',
+        message='Lost battle :(',
         data=reclamation_schema.dump(reclamation).data)
 
 
