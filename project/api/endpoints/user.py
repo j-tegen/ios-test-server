@@ -10,7 +10,7 @@ from project.api.common.utils import make_response
 
 
 bp_user = Blueprint('user', __name__)
-user_schema = UserSchema()
+user_schema = UserSchema(exclude=['reclamations'])
 users_schema = UserSchema(many=True, exclude=['reclamations', 'supplier_user_infos'])
 
 
