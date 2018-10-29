@@ -23,6 +23,7 @@ save_args = {
     'expected_arrival': fields.DateTime(format='iso', required=True),
     'actual_arrival': fields.DateTime(format='iso', required=True),
     'vehicle_number': fields.String(required=False),
+    'booking_number': fields.String(required=False),
     'refund': fields.Float(required=False),
     'supplier_id': fields.Integer(required=True),
 }
