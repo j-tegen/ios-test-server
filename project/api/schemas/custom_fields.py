@@ -11,7 +11,8 @@ class RelatedTo(fields.Field):
             return None
         return {
             '_id': value.id,
-            '_descriptive': value._descriptive
+            '_descriptive': value._descriptive,
+            '_key': value._key
         }
 
 
@@ -58,5 +59,7 @@ class RelatedFromList(fields.Field):
                 endpoint=self.endpoint_details,
                 _external=True,
                 id=item.id),
-            '_descriptive': item._descriptive
+            '_descriptive': item._descriptive,
+            '_id': item.id,
+            '_key': item._key
         }

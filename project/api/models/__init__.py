@@ -18,6 +18,10 @@ class BaseMixin(object):
     def _descriptive(self):
         return self.id
 
+    @property
+    def _key(self):
+        return self.id
+
     def update(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -172,6 +176,10 @@ class Supplier(BaseMixin, db.Model):
     def _descriptive(self):
         return self.name
 
+    @property
+    def _key(self):
+        return self.key
+
 
 class Reclamation(BaseMixin, db.Model):
     __tablename__ = 'reclamation'
@@ -205,6 +213,10 @@ class PaymentType(BaseMixin, db.Model):
     def _descriptive(self):
         return self.name
 
+    @property
+    def _key(self):
+        return self.key
+
 class ReimbursementType(BaseMixin, db.Model):
     __tablename__ = 'reimbursement_type'
     id = db.Column(db.Integer, primary_key=True)
@@ -214,6 +226,10 @@ class ReimbursementType(BaseMixin, db.Model):
     @property
     def _descriptive(self):
         return self.name
+
+    @property
+    def _key(self):
+        return self.key
 
 
 class SupplierUserInfo(BaseMixin, db.Model):
