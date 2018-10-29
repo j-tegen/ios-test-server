@@ -231,7 +231,7 @@ class SupplierUserInfo(BaseMixin, db.Model):
     reimbursement_type = db.relationship('ReimbursementType', backref='supplier_user_infos')
 
     # Skånetrafiken specific
-    jojo_number = db.Column(db.Integer)
+    jojo_number = db.Column(db.String)
 
 
 class Station(BaseMixin, db.Model):
