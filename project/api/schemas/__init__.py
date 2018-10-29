@@ -71,6 +71,10 @@ class SupplierUserInfoSchema(BaseSchema):
     class Meta:
         model = SupplierUserInfo
 
+    payment_type = RelatedTo(attribute='payment_type')
+    reimbursement_type = RelatedTo(attribute='reimbursement_type')
+    supplier = RelatedTo(attribute='supplier')
+
 
 class PaymentTypeSchema(BaseSchema):
     class Meta:

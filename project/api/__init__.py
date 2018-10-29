@@ -7,6 +7,7 @@ from .endpoints.admin import bp_admin
 from .endpoints.payment_type import bp_payment_type
 from .endpoints.reimbursement_type import bp_reimbursement_type
 from .endpoints.station import bp_station
+from .endpoints.supplier_user_info import bp_supplier_user_info
 from .. import app
 
 ROOT_PREFIX = app.config['APPLICATION_ROOT']
@@ -36,6 +37,9 @@ def register_blueprints():
     app.register_blueprint(
         bp_admin,
         url_prefix='{}/{}'.format(ROOT_PREFIX, 'admin'))
+    app.register_blueprint(
+        bp_supplier_user_info,
+        url_prefix='{}/{}'.format(ROOT_PREFIX, 'supplier_user_info'))
 
 def register_error_handlers():
     @app.errorhandler(422)
