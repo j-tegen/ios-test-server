@@ -41,6 +41,8 @@ class ReclamationSchema(BaseSchema):
     refund = fields.Decimal(as_string=True)
     user = RelatedTo(attribute='user')
     supplier = RelatedTo(attribute='supplier')
+    from_station = RelatedTo(attribute='from_station')
+    to_station = RelatedTo(attribute='to_station')
 
 
 class SupplierSchema(BaseSchema):

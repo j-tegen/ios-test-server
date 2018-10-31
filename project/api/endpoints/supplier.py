@@ -33,6 +33,9 @@ reclamation_args = {
     'actual_arrival': fields.DateTime(format='iso', required=True),
     'vehicle_number': fields.String(required=False),
     'refund': fields.Float(required=False),
+    'from_station_id': fields.Integer(required=False),
+    'to_station_id': fields.Integer(required=False),
+    'booking_number': fields.String(required=False),
 }
 
 

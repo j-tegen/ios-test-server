@@ -30,6 +30,8 @@ save_args = {
     'booking_number': fields.String(required=False),
     'refund': fields.Float(required=False),
     'supplier_id': fields.Integer(required=True),
+    'from_station_id': fields.Integer(required=False),
+    'to_station_id': fields.Integer(required=False),
 }
 
 
