@@ -32,6 +32,8 @@ save_args = {
     'supplier_id': fields.Integer(required=True),
     'from_station_id': fields.Integer(required=False),
     'to_station_id': fields.Integer(required=False),
+    'payment_type_id', fields.Integer(required=False),
+    'reimbursement_type_id', fields.Integer(required=False),
 }
 
 

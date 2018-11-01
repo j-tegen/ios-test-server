@@ -194,10 +194,16 @@ class Reclamation(BaseMixin, db.Model):
     actual_arrival = db.Column(db.DateTime, nullable=False)
     vehicle_number = db.Column(db.String, nullable=True)
     booking_number = db.Column(db.String, nullable=True)
+
     from_station_id = db.Column(db.Integer, db.ForeignKey('station.id'))
     from_station =db.relationship('Station', foreign_keys=[from_station_id])
     to_station_id = db.Column(db.Integer, db.ForeignKey('station.id'))
     to_station =db.relationship('Station', foreign_keys=[to_station_id])
+
+    payment_type_id = db.Column(db.Integer, db.ForeignKey('payment_type.id'))
+    payment_type = db.relationship('PaymentType', backref='reclamations')
+    reimbursement_type_id = db.Column(db.Integer, db.ForeignKey('reimbursement_type.id'))
+    reimbursement_type = db.relationship('ReimbursementType', backref='reclamations')
 
     refund = db.Column(db.Numeric(10,2), nullable=False, default=0)
     approved = db.Column(db.Boolean, default=False)
