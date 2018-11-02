@@ -43,6 +43,8 @@ class ReclamationSchema(BaseSchema):
     supplier = RelatedTo(attribute='supplier')
     from_station = RelatedTo(attribute='from_station')
     to_station = RelatedTo(attribute='to_station')
+    payment_type = RelatedTo(attribute='payment_type')
+    reimbursement_type = RelatedTo(attribute='reimbursement_type')
 
 
 class SupplierSchema(BaseSchema):
