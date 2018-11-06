@@ -1,12 +1,12 @@
 from flask import Blueprint, g
 from webargs import fields
-from webargs.flaskparser import use_args
+from webargs.flaskparser import use_args, use_kwargs
 
 from project import db, skanetrafiken
 from project.api.models import ReimbursementType, Supplier
 from project.api.schemas import ReimbursementTypeSchema
 from project.api.common.decorators import login_required, admin_required
-from project.api.common.utils import make_response
+from project.api.common.utils import make_response, filter_kwargs, create_filter
 
 
 bp_reimbursement_type = Blueprint('reimbursement_type', __name__)
@@ -39,14 +39,18 @@ def get_reimbursement_type_detail(id):
 
 @bp_reimbursement_type.route('/', methods=['GET'])
 @login_required
-def get_reimbursement_type_list():
+@use_kwargs(filter_kwargs)
+def get_reimbursement_type_list(**kwargs):
     """Private"""
-    reimbursement_types = ReimbursementType.query.all()
+    q = ReimbursementType.query
+    q, count = create_filter(ReimbursementType, q, kwargs)
+    reimbursement_types = q.all()
 
     return make_response(
         status_code=200,
         status='success',
         message=None,
+        count=count,
         data=reimbursement_types_schema.dump(reimbursement_types).data)
 
 
@@ -78,4 +82,5 @@ def create_reimbursement_type(args):
         status_code=200,
         status='success',
         message='Successfully created reimbursement_type',
+        count=count,
         data=reimbursement_type_schema.dump(reimbursement_type).data)

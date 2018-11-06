@@ -1,12 +1,12 @@
 from flask import Blueprint, g
 from webargs import fields
-from webargs.flaskparser import use_args
+from webargs.flaskparser import use_args, use_kwargs
 
 from project import db
 from project.api.models import Reclamation
 from project.api.schemas import ReclamationSchema
 from project.api.common.decorators import login_required, admin_required
-from project.api.common.utils import make_response
+from project.api.common.utils import make_response, filter_kwargs, create_filter
 
 
 bp_reclamation = Blueprint('reclamation', __name__)
@@ -57,13 +57,17 @@ def get_reclamation_detail(args, id):
 
 @bp_reclamation.route('/', methods=['GET'])
 @admin_required
-def get_reclamation_list():
+@use_kwargs(filter_kwargs)
+def get_reclamation_list(**kwargs):
     """Admin"""
-    reclamations = Reclamation.query.all()
+    q = Reclamation.query
+    q, count = create_filter(Reclamation, q, kwargs)
+    reclamations = q.all()
     return make_response(
         status_code=200,
         status='success',
         message=None,
+        count=count,
         data=reclamations_schema.dump(reclamations).data)
 
 

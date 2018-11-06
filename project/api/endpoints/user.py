@@ -1,12 +1,12 @@
 from flask import Blueprint, g
 from webargs import fields
-from webargs.flaskparser import use_args
+from webargs.flaskparser import use_args, use_kwargs
 
 from project import db
 from project.api.models import User, Reclamation, SupplierUserInfo
 from project.api.schemas import UserSchema, ReclamationSchema, SupplierUserInfoSchema
 from project.api.common.decorators import login_required, admin_required
-from project.api.common.utils import make_response
+from project.api.common.utils import make_response, filter_kwargs, create_filter
 
 
 bp_user = Blueprint('user', __name__)
@@ -49,14 +49,18 @@ def get_user_detail(args, id):
 
 @bp_user.route('/', methods=['GET'])
 @admin_required
-def get_user_list():
-    """Admin"""
-    users = User.query.all()
-    return make_response(
-        status_code=200,
-        status='success',
-        message=None,
-        data=users_schema.dump(users).data)
+@use_kwargs(filter_kwargs)
+def get_user_list(**kwargs):
+	"""Admin"""
+	q = db.session.query(User)
+	q, count = create_filter(User, q, kwargs)
+	users = q.all()
+	return make_response(
+		status_code=200,
+		status='success',
+		message=None,
+		count=count,
+		data=users_schema.dump(users).data)
 
 
 @bp_user.route('/<id>', methods=['PUT'])
@@ -103,13 +107,17 @@ def get_me():
 
 @bp_user.route('/<id>/reclamation', methods=['GET'])
 @admin_required
-def get_reclamation_list(id):
-    """Admin"""
-    reclamations = Reclamation.query.filter_by(user_id=id).all()
-    return make_response(
-        status_code=200,
-        status='success',
-        data=ReclamationSchema(many=True).dump(reclamations).data)
+@use_kwargs(filter_kwargs)
+def get_reclamation_list(id, **kwargs):
+	"""Admin"""
+	q = db.session.query(Reclamation)
+	q, count = create_filter(Reclamation, q, kwargs)
+	reclamations = q.all()
+	return make_response(
+		status_code=200,
+		status='success',
+		count=count,
+		data=ReclamationSchema(many=True).dump(reclamations).data)
 
 
 @bp_user.route('/<id>/supplier_user_info', methods=['GET'])

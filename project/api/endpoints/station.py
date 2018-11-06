@@ -1,13 +1,13 @@
 from flask import Blueprint, g
 from sqlalchemy import desc, func
 from webargs import fields
-from webargs.flaskparser import use_args
+from webargs.flaskparser import use_args, use_kwargs
 
 from project import db
 from project.api.models import Station, Reclamation
 from project.api.schemas import StationSchema, ReclamationSchema
 from project.api.common.decorators import login_required, admin_required
-from project.api.common.utils import make_response
+from project.api.common.utils import make_response, filter_kwargs, create_filter
 
 
 bp_station = Blueprint('station', __name__)
@@ -46,17 +46,21 @@ def get_station_detail(args, id):
 @bp_station.route('/', methods=['GET'])
 @login_required
 @use_args(stations_args)
-def get_station_list(args):
+@use_kwargs(filter_kwargs)
+def get_station_list(args, **kwargs):
     """Private"""
     filter_str = '%{}%'.format(args['filter'])
-    stations = Station.query.filter(
+    q = Station.query.filter(
         Station.supplier.has(key=args['supplier_key']),
         Station.name.ilike(filter_str)).order_by(
             func.similarity(Station.name, args['filter']).desc()
-        ).all()
+        )
+    q, count = create_filter(Station, q, kwargs)
+    stations = q.all()
 
     return make_response(
         status_code=200,
         status='success',
         message='This method has been replaced by "../supplier/<id>/station/ and should be considered deprecated.',
+        count=count,
         data=stations_schema.dump(stations).data)

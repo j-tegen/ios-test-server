@@ -1,12 +1,13 @@
 from flask import Blueprint, g
+from sqlalchemy import desc, func
 from webargs import fields
-from webargs.flaskparser import use_args
+from webargs.flaskparser import use_args, use_kwargs
 
 from project import db
-from project.api.models import Supplier, Reclamation, PaymentType, ReimbursementType
-from project.api.schemas import SupplierSchema, ReclamationSchema, PaymentTypeSchema, ReimbursementTypeSchema
+from project.api.models import Supplier, Reclamation, PaymentType, ReimbursementType, Station
+from project.api.schemas import SupplierSchema, ReclamationSchema, PaymentTypeSchema, ReimbursementTypeSchema, StationSchema
 from project.api.common.decorators import login_required, admin_required
-from project.api.common.utils import make_response
+from project.api.common.utils import make_response, filter_kwargs, create_filter
 
 
 bp_supplier = Blueprint('supplier', __name__)
@@ -61,13 +62,17 @@ def get_supplier_detail(args, id):
 
 @bp_supplier.route('/', methods=['GET'])
 @login_required
-def get_supplier_list():
+@use_kwargs(filter_kwargs)
+def get_supplier_list(**kwargs):
     """Private"""
-    suppliers = Supplier.query.all()
+    q = Supplier.query
+    q, count = create_filter(Supplier, q, kwargs)
+    suppliers = q.all()
     return make_response(
         status_code=200,
         status='success',
         message=None,
+        count=count,
         data=SupplierSchema(many=True, exclude=['supplier_user_infos']).dump(suppliers).data)
 
 
@@ -118,12 +123,16 @@ def delete_supplier(id):
 
 @bp_supplier.route('/<id>/reclamations', methods=['GET'])
 @login_required
-def get_reclamation_list(id):
+@use_kwargs(filter_kwargs)
+def get_reclamation_list(id, **kwargs):
     """Private"""
-    reclamations = Reclamation.query.filter_by(supplier_id=id).all()
+    q = Reclamation.query.filter_by(supplier_id=id)
+    q, count = create_filter(Reclamation, q, kwargs)
+    reclamations = q.all()
     return make_response(
         status_code=200,
         status='success',
+        count=count,
         data=ReclamationSchema(many=True).dump(reclamations).data)
 
 
@@ -131,7 +140,6 @@ def get_reclamation_list(id):
 @login_required
 def get_payment_types(id):
     """Private"""
-
     payment_types = Supplier.query.get(id).payment_types
     return make_response(
         status_code=200,
@@ -154,24 +162,26 @@ def get_reimbursement_types(id):
 @bp_supplier.route('/<id>/station', methods=['GET'])
 @login_required
 @use_args(stations_args)
-def get_station_list(args, id):
+@use_kwargs(filter_kwargs)
+def get_station_list(args, id, **kwargs):
     """Private"""
-    filter_str = '%{}%'.format(args['filter'])
-    stations
+
+    q = Station.query.filter(Station.supplier.has(id=id))
     if args.get('filter', None):
-        stations = Station.query.filter(
-            Station.supplier.has(id=id),
+        filter_str = '%{}%'.format(args['filter'])
+        q = q.filter(
             Station.name.ilike(filter_str)).order_by(
                 func.similarity(Station.name, args['filter']).desc()
-            ).all()
-    else:
-        stations = Supplier.query.get(id).stations
+            )
+    q, count = create_filter(Station, q, kwargs)
+    stations = q.all()
 
     return make_response(
         status_code=200,
         status='success',
         message=None,
-        data=stations_schema.dump(stations).data)
+        count=count,
+        data=StationSchema(many=True).dump(stations).data)
 
 
 @bp_supplier.route('/<id>/reclamation', methods=['POST'])

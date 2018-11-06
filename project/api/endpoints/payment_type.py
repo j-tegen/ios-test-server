@@ -1,12 +1,12 @@
 from flask import Blueprint, g
 from webargs import fields
-from webargs.flaskparser import use_args
+from webargs.flaskparser import use_args, use_kwargs
 
 from project import db, skanetrafiken
 from project.api.models import PaymentType, Supplier
 from project.api.schemas import PaymentTypeSchema
 from project.api.common.decorators import login_required, admin_required
-from project.api.common.utils import make_response
+from project.api.common.utils import make_response, filter_kwargs, create_filter
 
 
 bp_payment_type = Blueprint('payment_type', __name__)
@@ -43,14 +43,18 @@ def get_payment_type_detail(id):
 
 @bp_payment_type.route('/', methods=['GET'])
 @login_required
-def get_payment_type_list():
+@use_kwargs(filter_kwargs)
+def get_payment_type_list(**kwargs):
     """Private"""
-    payment_types = PaymentType.query.all()
+    q = PaymentType.query
+    q, count = create_filter(PaymentType, q, kwargs)
+    payment_types = q.all()
 
     return make_response(
         status_code=200,
         status='success',
         message=None,
+        count=count,
         data=payment_types_schema.dump(payment_types).data)
 
 
