@@ -1,7 +1,8 @@
 import jwt
 import datetime
 from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy import event, inspect
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy import event, inspect, func
 from flask import g
 from sqlalchemy_utils.types.choice import ChoiceType
 
@@ -14,13 +15,21 @@ class BaseMixin(object):
     timestamp = db.Column(db.DateTime, nullable=False,
         default=datetime.datetime.utcnow())
 
-    @property
+    @hybrid_property
     def _descriptive(self):
         return self.id
 
-    @property
+    @_descriptive.expression
+    def _descriptive(cls):
+        return cls.id
+
+    @hybrid_property
     def _key(self):
         return self.id
+
+    @_key.expression
+    def _key(cls):
+        return cls.id
 
     def update(self, **kwargs):
         for key, value in kwargs.items():
@@ -65,9 +74,13 @@ class User(BaseMixin, db.Model):
     admin = db.Column(db.Boolean, default=False)
     agreed_terms = db.Column(db.Boolean, default=False)
 
-    @property
+    @hybrid_property
     def _descriptive(self):
         return self.name
+
+    @_descriptive.expression
+    def _descriptive(cls):
+        return cls.name
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -172,13 +185,21 @@ class Supplier(BaseMixin, db.Model):
         lazy='subquery',
         backref=db.backref('suppliers', lazy=True))
 
-    @property
+    @hybrid_property
     def _descriptive(self):
         return self.name
 
-    @property
+    @_descriptive.expression
+    def _descriptive(cls):
+        return cls.name
+
+    @hybrid_property
     def _key(self):
         return self.key
+
+    @_key.expression
+    def _key(cls):
+        return cls.key
 
 
 class Reclamation(BaseMixin, db.Model):
@@ -208,9 +229,13 @@ class Reclamation(BaseMixin, db.Model):
     refund = db.Column(db.Numeric(10,2), nullable=False, default=0)
     approved = db.Column(db.Boolean, default=False)
 
-    @property
+    @hybrid_property
     def _descriptive(self):
         return "{created} - {supplier}".format(created=self.created, supplier=self.supplier.name)
+
+    @_descriptive.expression
+    def _descriptive(cls):
+        return func.concat(cls.created, " ", cls.supplier.name)
 
 
 class PaymentType(BaseMixin, db.Model):
@@ -219,13 +244,21 @@ class PaymentType(BaseMixin, db.Model):
     name = db.Column(db.String, nullable=False, unique=True)
     key = db.Column(db.String, nullable=False, unique=True)
 
-    @property
+    @hybrid_property
     def _descriptive(self):
         return self.name
 
-    @property
+    @_descriptive.expression
+    def _descriptive(cls):
+        return cls.name
+
+    @hybrid_property
     def _key(self):
         return self.key
+
+    @_key.expression
+    def _key(cls):
+        return cls.key
 
 class ReimbursementType(BaseMixin, db.Model):
     __tablename__ = 'reimbursement_type'
@@ -233,13 +266,21 @@ class ReimbursementType(BaseMixin, db.Model):
     name = db.Column(db.String, nullable=False, unique=True)
     key = db.Column(db.String, nullable=False, unique=True)
 
-    @property
+    @hybrid_property
     def _descriptive(self):
         return self.name
 
-    @property
+    @_descriptive.expression
+    def _descriptive(cls):
+        return cls.name
+
+    @hybrid_property
     def _key(self):
         return self.key
+
+    @_key.expression
+    def _key(cls):
+        return cls.key
 
 
 class SupplierUserInfo(BaseMixin, db.Model):
@@ -268,9 +309,13 @@ class Station(BaseMixin, db.Model):
     name = db.Column(db.String, nullable=False)
     migration_id = db.Column(db.String, nullable=False)
 
-    @property
+    @hybrid_property
     def _descriptive(self):
         return self.name
+
+    @_descriptive.expression
+    def _descriptive(cls):
+        return cls.name
 
 
 # # LOG ACTIVITIES
