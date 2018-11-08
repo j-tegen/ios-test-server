@@ -213,6 +213,7 @@ class Reclamation(BaseMixin, db.Model):
 
     expected_arrival = db.Column(db.DateTime, nullable=False)
     actual_arrival = db.Column(db.DateTime, nullable=False)
+    delay = db.Column(db.Integer, default=0)
     vehicle_number = db.Column(db.String, nullable=True)
     booking_number = db.Column(db.String, nullable=True)
 
@@ -236,6 +237,10 @@ class Reclamation(BaseMixin, db.Model):
     @_descriptive.expression
     def _descriptive(cls):
         return func.concat(cls.created, " ", cls.supplier.name)
+
+    @staticmethod
+    def before_update(mapper, connection, target):
+        target.delay = (target.actual_arrival - target.expected_arrival).total_seconds() / 60
 
 
 class PaymentType(BaseMixin, db.Model):

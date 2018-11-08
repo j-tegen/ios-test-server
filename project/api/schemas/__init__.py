@@ -45,6 +45,7 @@ class ReclamationSchema(BaseSchema):
     to_station = RelatedTo(attribute='to_station')
     payment_type = RelatedTo(attribute='payment_type')
     reimbursement_type = RelatedTo(attribute='reimbursement_type')
+    delay = fields.Integer(dump_only=True, dump_to='_delay')
 
 
 class SupplierSchema(BaseSchema):
