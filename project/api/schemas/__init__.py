@@ -14,9 +14,9 @@ from .custom_fields import RelatedTo, RelatedFromQuery, RelatedFromList
 
 
 class BaseSchema(ma.ModelSchema):
-    id = fields.Integer(dump_to='_id')
-    created = fields.DateTime(dump_only=True, dump_to='_created')
-    timestamp = fields.DateTime(dump_only=True, dump_to='_timestamp')
+    id = fields.Integer(dump_to='id')
+    created = fields.DateTime(dump_only=True, dump_to='created')
+    timestamp = fields.DateTime(dump_only=True, dump_to='timestamp')
     _descriptive = fields.String(dump_only=True)
 
 
