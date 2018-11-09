@@ -109,15 +109,16 @@ def get_me():
 @admin_required
 @use_kwargs(filter_kwargs)
 def get_reclamation_list(id, **kwargs):
-	"""Admin"""
-	q = db.session.query(Reclamation)
-	q, count = create_filter(Reclamation, q, kwargs)
-	reclamations = q.all()
-	return make_response(
-		status_code=200,
-		status='success',
-		count=count,
-		data=ReclamationSchema(many=True).dump(reclamations).data)
+    """Admin"""
+    q = db.session.query(Reclamation)
+    q = q.filter_by(user_id=id)
+    q, count = create_filter(Reclamation, q, kwargs)
+    reclamations = q.all()
+    return make_response(
+        status_code=200,
+        status='success',
+        count=count,
+        data=ReclamationSchema(many=True).dump(reclamations).data)
 
 
 @bp_user.route('/<id>/supplier_user_info', methods=['GET'])
