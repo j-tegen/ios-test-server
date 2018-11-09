@@ -44,9 +44,10 @@ def create_filter(model, q, kwargs):
 		elif operator == 'like':
 			q = q.filter(f.ilike('%{}%'.format(val)))
 
+	count = q.count()
+
 	q = get_order_by(model, q, kwargs['order_by'])
 
-	count = q.count()
 	attr = kwargs['limit']
 	if attr:
 		q = q.limit(attr)
